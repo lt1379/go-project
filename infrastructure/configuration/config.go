@@ -11,6 +11,7 @@ import (
 type Config struct {
 	Database         Database         `json:"database"`
 	TulusTech        TulusTech        `json:"tulusTech"`
+	TimeApi          TimeApi          `json:"timeApi"`
 	Openapi          Openapi          `json:"openapi"`
 	App              App              `json:"app"`
 	GoogleSheet      GoogleSheet      `json:"googleSheet"`
@@ -65,6 +66,11 @@ type ControlroomDb struct {
 }
 
 type TulusTech struct {
+	Header Header `json:"header"`
+	Host   string `json:"host"`
+}
+
+type TimeApi struct {
 	Header Header `json:"header"`
 	Host   string `json:"host"`
 }

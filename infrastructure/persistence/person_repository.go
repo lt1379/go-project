@@ -31,7 +31,7 @@ func (personRepository *PersonRepository) GetByName(ctx context.Context, name st
 	defer statement.Close()
 
 	result := statement.QueryRow(name)
-	err = result.Scan(&person.Country)
+	err = result.Scan(&person.Name, &person.Country)
 	if err != nil {
 		logger.GetLogger().WithField("error", err).Error("Error while query")
 		return person, err

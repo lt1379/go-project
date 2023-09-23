@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"my-project/domain/dto"
+	"my-project/infrastructure/clients/timeapi"
+	timeapimodels "my-project/infrastructure/clients/timeapi/models"
 	tulushost "my-project/infrastructure/clients/tulustech"
 	"my-project/infrastructure/clients/tulustech/models"
 	"my-project/infrastructure/logger"
@@ -13,16 +15,18 @@ import (
 
 type ITestUsecase interface {
 	Test(ctx context.Context) dto.TestDto
+	GetCurrentTime(ctx context.Context, timeZone string) (dto.ResTimeApiDto, error)
 }
 
 type TestUsecase struct {
 	TulusTechHost  tulushost.ITulusHost
 	TestPubSub     pubsub.ITestPubSub
 	TestServiceBus servicebus.ITestServiceBus
+	TimeApiHost    timeapi.ITimeApiHost
 }
 
-func NewTestUsecase(tulusTechHost tulushost.ITulusHost, testPubSub pubsub.ITestPubSub, testServiceBus servicebus.ITestServiceBus) ITestUsecase {
-	return &TestUsecase{TulusTechHost: tulusTechHost, TestPubSub: testPubSub, TestServiceBus: testServiceBus}
+func NewTestUsecase(tulusTechHost tulushost.ITulusHost, testPubSub pubsub.ITestPubSub, testServiceBus servicebus.ITestServiceBus, timeApiHost timeapi.ITimeApiHost) ITestUsecase {
+	return &TestUsecase{TulusTechHost: tulusTechHost, TestPubSub: testPubSub, TestServiceBus: testServiceBus, TimeApiHost: timeApiHost}
 }
 
 func (testUsecase *TestUsecase) Test(ctx context.Context) dto.TestDto {
@@ -65,4 +69,28 @@ func (testUsecase *TestUsecase) Test(ctx context.Context) dto.TestDto {
 	res.TulusTech = "OK"
 
 	return res
+}
+
+func (testUsecase *TestUsecase) GetCurrentTime(ctx context.Context, timeZone string) (dto.ResTimeApiDto, error) {
+	var res dto.ResTimeApiDto
+
+	reqHeader := timeapimodels.ReqHeader{}
+	resTimeApi, err := testUsecase.TimeApiHost.GetCurrentTime(ctx, reqHeader, timeZone)
+	if err != nil {
+		logger.GetLogger().Error("Error while get timezone")
+		return res, err
+	}
+	logger.GetLogger().WithField("resTimeApiponse", resTimeApi).Info("Successfully get timezone")
+	resTimeApiByte, err := json.Marshal(resTimeApi)
+	if err != nil {
+		logger.GetLogger().Error("Error while marshalling")
+		return res, err
+	}
+
+	if err := json.Unmarshal(resTimeApiByte, &res); err != nil {
+		logger.GetLogger().Error("Error while unmarshalling")
+		return res, err
+	}
+
+	return res, nil
 }

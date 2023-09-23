@@ -5,3 +5,7 @@ type TestDto struct {
 	ServiceBus string `json:"service_bus"`
 	TulusTech  string `json:"tulus_tech"`
 }
+
+type ReqUriParamTimeApi struct {
+	Timezone string `json:"timezone" binding:"required" uri:"timezone"`
+}

@@ -75,13 +75,14 @@ func (s *PersonHandlerSuite) TestGetCountrySuccess(t *testing.T) {
 	}
 
 	tulusTechHost := tulushost.NewTulusHost(configuration.C.TulusTech.Host)
+	timeApiHost := tulushost.NewTulusHost(configuration.C.TulusTech.Host)
 
 	testPubSub := pubsub.NewTestPubSub(pubSubClient)
 	testServiceBus := servicebus.NewTestServiceBus(azServiceBusClient)
 
 	userRepository := persistence.NewUserRepository(db)
 	userUsecase := usecase.NewUserUsecase(userRepository)
-	testUsecase := usecase.NewTestUsecase(tulusTechHost, testPubSub, testServiceBus)
+	testUsecase := usecase.NewTestUsecase(tulusTechHost, testPubSub, testServiceBus, timeApiHost)
 
 	personUsecase := usecase.NewPersonUsecase(s.repository)
 

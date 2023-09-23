@@ -33,6 +33,13 @@
         "host": "https://tulus.fun",
         "token": "aBH20WFbfJRNr0oji4n6mE7fWfebd8mVYxfjpc1y"
     },
+    "timeApi": {
+        "header": {
+            "contentType": "application/json"
+        },
+        "host": "https://timeapi.io",
+        "token": "aBH20WFbfJRNr0oji4n6mE7fWfebd8mVYxfjpc1y"
+    },
     "data": {
         "source": "googlesheet"
     },

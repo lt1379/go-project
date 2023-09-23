@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	timeapihost "my-project/infrastructure/clients/timeapi"
 	tulushost "my-project/infrastructure/clients/tulustech"
 	"my-project/infrastructure/configuration"
 	"my-project/infrastructure/logger"
@@ -67,13 +68,14 @@ func main() {
 	}
 
 	tulusTechHost := tulushost.NewTulusHost(configuration.C.TulusTech.Host)
+	timeApiHost := timeapihost.NewTimeApiHost(configuration.C.TimeApi.Host)
 
 	testPubSub := pubsub.NewTestPubSub(pubSubClient)
 	testServiceBus := servicebus.NewTestServiceBus(azServiceBusClient)
 
 	userRepository := persistence.NewUserRepository(psqlDb)
 	userUsecase := usecase.NewUserUsecase(userRepository)
-	testUsecase := usecase.NewTestUsecase(tulusTechHost, testPubSub, testServiceBus)
+	testUsecase := usecase.NewTestUsecase(tulusTechHost, testPubSub, testServiceBus, timeApiHost)
 
 	personRepository := persistence.NewPersonRepository(mysqlDb)
 	personUsecase := usecase.NewPersonUsecase(personRepository)

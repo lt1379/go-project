@@ -30,6 +30,7 @@ func InitiateRouter(personHandler httpHandler.IPersonHandler, userHandler httpHa
 	api.Use(middleware.Auth(userRepository))
 
 	router.GET("/country/:name", personHandler.GetCountry)
+	router.GET("/current-time", testHandler.GetCurrentTime)
 	router.POST("/login", userHandler.Login)
 	router.POST("/register", userHandler.Register)
 
