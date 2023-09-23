@@ -75,10 +75,14 @@ func main() {
 	userUsecase := usecase.NewUserUsecase(userRepository)
 	testUsecase := usecase.NewTestUsecase(tulusTechHost, testPubSub, testServiceBus)
 
+	personRepository := persistence.NewPersonRepository(mysqlDb)
+	personUsecase := usecase.NewPersonUsecase(personRepository)
+
 	userHandler := httpHandler.NewUserHandler(userUsecase)
+	personHandler := httpHandler.NewPersonHandler(personUsecase)
 	testHandler := httpHandler.NewTestHandler(testUsecase)
 
-	router := InitiateRouter(userHandler, testHandler, userRepository)
+	router := InitiateRouter(personHandler, userHandler, testHandler, userRepository)
 
 	if err != nil {
 		logger.GetLogger().WithField("error", err).Error("Error while StartSubscription")

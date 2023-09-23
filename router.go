@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InitiateRouter(userHandler httpHandler.IUserHandler, testHandler httpHandler.ITestHandler, userRepository repository.IUser) *gin.Engine {
+func InitiateRouter(personHandler httpHandler.IPersonHandler, userHandler httpHandler.IUserHandler, testHandler httpHandler.ITestHandler, userRepository repository.IUser) *gin.Engine {
 	router := gin.New()
 	router.Use(gin.Recovery())
 	router.Use(cors.New(cors.Config{
@@ -29,6 +29,7 @@ func InitiateRouter(userHandler httpHandler.IUserHandler, testHandler httpHandle
 	api := router.Group("api")
 	api.Use(middleware.Auth(userRepository))
 
+	router.GET("/country/:name", personHandler.GetCountry)
 	router.POST("/login", userHandler.Login)
 	router.POST("/register", userHandler.Register)
 

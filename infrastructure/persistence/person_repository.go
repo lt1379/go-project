@@ -22,7 +22,7 @@ func (personRepository *PersonRepository) GetByName(ctx context.Context, name st
 
 	statement, err := personRepository.sqlDB.PrepareContext(ctx, `SELECT p.name, p.country 
 	FROM persons AS p 
-	WHERE u.name = ?`)
+	WHERE p.name = ?`)
 
 	if err != nil {
 		logger.GetLogger().WithField("error", err).Error("Error while prepare statement")
